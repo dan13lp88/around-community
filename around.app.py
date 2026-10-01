@@ -978,31 +978,34 @@ elif page == "🍔 Local Deals":
 # ---------------------------------------------------------
 # FOOTER
 # ---------------------------------------------------------
-
-with open("MilnovaLogoUpdateLIGHTMODE.svg", "r", encoding="utf-8") as svg_file:
-    milnova_svg = svg_file.read()
+# ---------------------------------------------------------
+# FOOTER
+# ---------------------------------------------------------
 
 st.markdown(
-    f"""
-    <div class="around-footer">
-        <strong>around.</strong>&nbsp;•&nbsp;Lyons, Kansas
-        <br><br>
-        Powered by Milnova Software Solutions
-        <div style="display:flex; justify-content:center; margin-top:10px;">
-            <div style="width:130px; height:auto;">
-                {milnova_svg}
-            </div>
-        </div>
-    </div>
-
-    <style>
-        .around-footer svg {{
-            width: 130px !important;
-            height: auto !important;
-            max-width: 130px !important;
-            display: block !important;
-        }}
-    </style>
-    """,
+    '<div class="around-footer"><strong>around.</strong>&nbsp;•&nbsp;Lyons, Kansas<br><br>Powered by Milnova Software Solutions</div>',
     unsafe_allow_html=True,
 )
+
+with st.container():
+    st.markdown(
+        """
+        <style>
+        div[data-testid="stImage"] {
+            margin-left: auto;
+            margin-right: auto;
+            width: fit-content;
+        }
+
+        div[data-testid="stImage"] > div {
+            width: fit-content;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    st.image(
+        "MilnovaLogoUpdateLIGHTMODE.svg",
+        width=130,
+    )
