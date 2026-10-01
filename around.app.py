@@ -227,22 +227,11 @@ st.markdown(
            ===================================================== */
 
         .around-footer {
-    text-align: center;
-    color: #9CA3AF;
-    font-size: 0.78rem;
-    padding-top: 35px;
-    padding-bottom: 15px;
-}
-
-[data-testid="stImage"] {
-    display: flex;
-    justify-content: center;
-}
-
-[data-testid="stImage"] img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+            text-align: center;
+            color: #9CA3AF;
+            font-size: 0.78rem;
+            padding-top: 35px;
+            padding-bottom: 15px;
         }
 
         /* =====================================================
@@ -970,6 +959,8 @@ elif page == "🍔 Local Deals":
         """),
         unsafe_allow_html=True,
     )
+
+
 # ---------------------------------------------------------
 # FOOTER
 # ---------------------------------------------------------
@@ -979,20 +970,9 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-with st.container():
-    st.markdown(
-        """
-        <style>
-        div[data-testid="stImage"] img {
-            display: block;
-            margin-left: auto !important;
-            margin-right: auto !important;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+logo_left, logo_center, logo_right = st.columns([4, 1, 4])
 
+with logo_center:
     st.image(
         "MilnovaLogoUpdateLIGHTMODE.svg",
         width=130,
