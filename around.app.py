@@ -21,6 +21,49 @@ st.set_page_config(
 
 
 # ---------------------------------------------------------
+# DEMO SERVICE DATA
+# ---------------------------------------------------------
+
+# For now, service listings are stored only in the current
+# Streamlit session. Later, this will be replaced by Supabase.
+
+if "services" not in st.session_state:
+    st.session_state.services = [
+        {
+            "name": "Jake's Lawn Service",
+            "category": "Lawn Care",
+            "description": "Mowing, trimming, cleanup and small residential yards.",
+            "location": "Lyons and surrounding area",
+            "phone": "",
+        },
+        {
+            "name": "Smith Plumbing",
+            "category": "Plumbing",
+            "description": "Residential plumbing repairs, fixture replacement and small installations.",
+            "location": "Lyons, Kansas",
+            "phone": "",
+        },
+        {
+            "name": "Main Street Cleaning",
+            "category": "Cleaning",
+            "description": "Home and small office cleaning services.",
+            "location": "Lyons, Kansas",
+            "phone": "",
+        },
+        {
+            "name": "Rice County Handyman",
+            "category": "Handyman",
+            "description": "Small home repairs, assembly, maintenance and general handyman work.",
+            "location": "Lyons and surrounding area",
+            "phone": "",
+        },
+    ]
+
+if "show_service_form" not in st.session_state:
+    st.session_state.show_service_form = False
+
+
+# ---------------------------------------------------------
 # CUSTOM STYLING
 # ---------------------------------------------------------
 
@@ -300,6 +343,52 @@ def marketplace_card(title, price, meta):
     )
 
 
+def service_card(service):
+    """Render a service listing."""
+
+    category_icons = {
+        "Handyman": "🔨",
+        "Lawn Care": "🌱",
+        "Plumbing": "🚰",
+        "Electrical": "⚡",
+        "HVAC": "❄️",
+        "Cleaning": "🧹",
+        "Tree Service": "🌳",
+        "Auto Repair": "🚗",
+        "Pet Services": "🐕",
+        "Photography": "📸",
+        "Other": "🔧",
+    }
+
+    icon = category_icons.get(service["category"], "🔧")
+
+    phone_html = ""
+
+    if service.get("phone"):
+        phone_html = (
+            f'<div class="post-meta">📞 {service["phone"]}</div>'
+        )
+
+    st.markdown(
+        dedent(f"""
+            <div class="around-card">
+                <span class="pill">{service["category"].upper()}</span>
+                <div class="post-author">
+                    {icon} {service["name"]}
+                </div>
+                <div class="post-text">
+                    {service["description"]}
+                </div>
+                <div class="post-meta">
+                    📍 Serves {service["location"]}
+                </div>
+                {phone_html}
+            </div>
+        """),
+        unsafe_allow_html=True,
+    )
+
+
 # ---------------------------------------------------------
 # SIDEBAR
 # ---------------------------------------------------------
@@ -427,10 +516,6 @@ if page == "🏠 Home":
 
     st.write("")
 
-    # -----------------------------------------------------
-    # QUICK ACCESS
-    # -----------------------------------------------------
-
     quick1, quick2, quick3, quick4, quick5 = st.columns(5)
 
     with quick1:
@@ -470,18 +555,10 @@ if page == "🏠 Home":
 
     st.write("")
 
-    # -----------------------------------------------------
-    # HOME CONTENT
-    # -----------------------------------------------------
-
     feed, rail = st.columns(
         [2.15, 1],
         gap="large",
     )
-
-    # -----------------------------------------------------
-    # COMMUNITY FEED
-    # -----------------------------------------------------
 
     with feed:
 
@@ -560,10 +637,6 @@ if page == "🏠 Home":
             reactions=3,
             comments=8,
         )
-
-    # -----------------------------------------------------
-    # RIGHT RAIL
-    # -----------------------------------------------------
 
     with rail:
 
@@ -839,71 +912,229 @@ elif page == "🔧 Services":
         "Find someone around town who can help."
     )
 
+    # -----------------------------------------------------
+    # SEARCH + FILTERS
+    # -----------------------------------------------------
+
     service_search = st.text_input(
         "What are you looking for?",
-        placeholder=(
-            "Handyman, mowing, plumbing, cleaning..."
-        ),
+        placeholder="Search services, businesses, or keywords...",
     )
 
-    category = st.selectbox(
+    service_category = st.selectbox(
         "Service category",
         [
             "All Services",
-            "🔨 Handyman",
-            "🌱 Lawn Care",
-            "🚰 Plumbing",
-            "⚡ Electrical",
-            "❄️ HVAC",
-            "🧹 Cleaning",
-            "🌳 Tree Service",
-            "🚗 Auto Repair",
-            "🐕 Pet Services",
-            "📸 Photography",
+            "Handyman",
+            "Lawn Care",
+            "Plumbing",
+            "Electrical",
+            "HVAC",
+            "Cleaning",
+            "Tree Service",
+            "Auto Repair",
+            "Pet Services",
+            "Photography",
             "Other",
         ],
     )
 
     st.write("")
 
+    # -----------------------------------------------------
+    # SERVICES HEADER + LIST SERVICE BUTTON
+    # -----------------------------------------------------
+
     services_header, service_action = st.columns(
         [4, 1]
     )
 
     with services_header:
-
-        st.subheader(
-            "Services around Lyons"
-        )
+        st.subheader("Services around Lyons")
 
     with service_action:
-
-        st.button(
+        if st.button(
             "➕ List Service",
             type="primary",
             use_container_width=True,
+        ):
+            st.session_state.show_service_form = (
+                not st.session_state.show_service_form
+            )
+
+    # -----------------------------------------------------
+    # LIST SERVICE FORM
+    # -----------------------------------------------------
+
+    if st.session_state.show_service_form:
+
+        st.markdown("### List a Service")
+
+        st.caption(
+            "Add a service to Around. For this prototype, "
+            "the listing will only remain during the current session."
         )
 
-    st.markdown(
-        dedent("""
-            <div class="around-card">
-                <span class="pill">LAWN CARE</span>
-                <div class="post-author">🌱 Jake's Lawn Service</div>
-                <div class="post-text">
-                    Mowing, trimming, cleanup and small residential yards.
-                </div>
-                <div class="post-meta">
-                    Serves Lyons and surrounding area
-                </div>
-            </div>
-        """),
-        unsafe_allow_html=True,
-    )
+        with st.form("list_service_form"):
 
-    st.button(
-        "View Contact Information",
-        use_container_width=True,
-    )
+            service_name = st.text_input(
+                "Business / Service Name",
+                placeholder="Example: Jake's Lawn Service",
+            )
+
+            new_service_category = st.selectbox(
+                "Category",
+                [
+                    "Handyman",
+                    "Lawn Care",
+                    "Plumbing",
+                    "Electrical",
+                    "HVAC",
+                    "Cleaning",
+                    "Tree Service",
+                    "Auto Repair",
+                    "Pet Services",
+                    "Photography",
+                    "Other",
+                ],
+                key="new_service_category",
+            )
+
+            service_description = st.text_area(
+                "Description",
+                placeholder=(
+                    "Tell people what services you provide..."
+                ),
+            )
+
+            service_location = st.text_input(
+                "Service Area",
+                value="Lyons, Kansas",
+            )
+
+            service_phone = st.text_input(
+                "Phone (optional)",
+                placeholder="Example: 620-555-1234",
+            )
+
+            form_left, form_right = st.columns(2)
+
+            with form_left:
+                submit_service = st.form_submit_button(
+                    "List Service",
+                    type="primary",
+                    use_container_width=True,
+                )
+
+            with form_right:
+                cancel_service = st.form_submit_button(
+                    "Cancel",
+                    use_container_width=True,
+                )
+
+            if submit_service:
+
+                if not service_name.strip():
+                    st.error(
+                        "Please enter a business or service name."
+                    )
+
+                elif not service_description.strip():
+                    st.error(
+                        "Please enter a description."
+                    )
+
+                elif not service_location.strip():
+                    st.error(
+                        "Please enter a service area."
+                    )
+
+                else:
+
+                    st.session_state.services.append(
+                        {
+                            "name": service_name.strip(),
+                            "category": new_service_category,
+                            "description": service_description.strip(),
+                            "location": service_location.strip(),
+                            "phone": service_phone.strip(),
+                        }
+                    )
+
+                    st.session_state.show_service_form = False
+
+                    st.success(
+                        f"{service_name.strip()} was added to Around!"
+                    )
+
+                    st.rerun()
+
+            if cancel_service:
+                st.session_state.show_service_form = False
+                st.rerun()
+
+        st.divider()
+
+    # -----------------------------------------------------
+    # FILTER SERVICE LISTINGS
+    # -----------------------------------------------------
+
+    filtered_services = []
+
+    for service in st.session_state.services:
+
+        category_matches = (
+            service_category == "All Services"
+            or service["category"] == service_category
+        )
+
+        search_text = service_search.strip().lower()
+
+        searchable_text = (
+            f'{service["name"]} '
+            f'{service["category"]} '
+            f'{service["description"]} '
+            f'{service["location"]}'
+        ).lower()
+
+        search_matches = (
+            not search_text
+            or search_text in searchable_text
+        )
+
+        if category_matches and search_matches:
+            filtered_services.append(service)
+
+    # -----------------------------------------------------
+    # DISPLAY RESULTS
+    # -----------------------------------------------------
+
+    if filtered_services:
+
+        st.caption(
+            f"{len(filtered_services)} "
+            f"{'service' if len(filtered_services) == 1 else 'services'} found"
+        )
+
+        for index, service in enumerate(filtered_services):
+
+            service_card(service)
+
+            if service.get("phone"):
+                if st.button(
+                    "View Contact Information",
+                    key=f"service_contact_{index}_{service['name']}",
+                    use_container_width=True,
+                ):
+                    st.info(
+                        f"📞 {service['phone']}"
+                    )
+
+    else:
+
+        st.info(
+            "No services match your search or selected category."
+        )
 
 
 # =========================================================
