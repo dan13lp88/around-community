@@ -966,17 +966,7 @@ elif page == "🍔 Local Deals":
 # ---------------------------------------------------------
 
 st.markdown(
-    dedent("""
-        <div class="around-footer">
-            <strong>around.</strong>
-            &nbsp;•&nbsp;
-            Lyons, Kansas
-
-            <br><br>
-
-            Powered by Milnova Software Solutions
-        </div>
-    """),
+    '<div class="around-footer"><strong>around.</strong>&nbsp;•&nbsp;Lyons, Kansas<br><br>Powered by Milnova Software Solutions</div>',
     unsafe_allow_html=True,
 )
 
