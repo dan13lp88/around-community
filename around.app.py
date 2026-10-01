@@ -970,14 +970,6 @@ elif page == "🍔 Local Deals":
         """),
         unsafe_allow_html=True,
     )
-
-
-# ---------------------------------------------------------
-# FOOTER
-# ---------------------------------------------------------
-# ---------------------------------------------------------
-# FOOTER
-# ---------------------------------------------------------
 # ---------------------------------------------------------
 # FOOTER
 # ---------------------------------------------------------
@@ -991,14 +983,10 @@ with st.container():
     st.markdown(
         """
         <style>
-        div[data-testid="stImage"] {
-            margin-left: auto;
-            margin-right: auto;
-            width: fit-content;
-        }
-
-        div[data-testid="stImage"] > div {
-            width: fit-content;
+        div[data-testid="stImage"] img {
+            display: block;
+            margin-left: auto !important;
+            margin-right: auto !important;
         }
         </style>
         """,
