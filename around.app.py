@@ -975,12 +975,17 @@ elif page == "🍔 Local Deals":
 # ---------------------------------------------------------
 # FOOTER
 # ---------------------------------------------------------
-st.markdown(
-    '<div class="around-footer"><strong>around.</strong>&nbsp;•&nbsp;Lyons, Kansas<br><br>Powered by Milnova Software Solutions</div>',
-    unsafe_allow_html=True,
-)
+with open("MilnovaLogoUpdateLIGHTMODE.svg", "r", encoding="utf-8") as svg_file:
+    milnova_svg = svg_file.read()
 
-st.image(
-    "MilnovaLogoUpdateLIGHTMODE.svg",
-    width=130,
+st.markdown(
+    f'<div class="around-footer">'
+    f'<strong>around.</strong>&nbsp;•&nbsp;Lyons, Kansas'
+    f'<br><br>'
+    f'Powered by Milnova Software Solutions'
+    f'<div style="display:flex; justify-content:center; align-items:center; margin-top:10px;">'
+    f'<div style="width:130px;">{milnova_svg}</div>'
+    f'</div>'
+    f'</div>',
+    unsafe_allow_html=True,
 )
