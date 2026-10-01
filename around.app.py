@@ -975,7 +975,6 @@ elif page == "🍔 Local Deals":
 # ---------------------------------------------------------
 # FOOTER
 # ---------------------------------------------------------
-
 st.markdown(
     '<div class="around-footer"><strong>around.</strong>&nbsp;•&nbsp;Lyons, Kansas<br><br>Powered by Milnova Software Solutions</div>',
     unsafe_allow_html=True,
@@ -985,4 +984,3 @@ st.image(
     "MilnovaLogoUpdateLIGHTMODE.svg",
     width=130,
 )
-    )
