@@ -1,5 +1,6 @@
 import streamlit as st
 from textwrap import dedent
+import base64
 
 # =========================================================
 # AROUND
@@ -255,6 +256,12 @@ st.markdown(
 # ---------------------------------------------------------
 # HELPER FUNCTIONS
 # ---------------------------------------------------------
+
+def get_svg_base64(file_path):
+    """Convert a local SVG file to base64 for reliable display."""
+    with open(file_path, "rb") as svg_file:
+        return base64.b64encode(svg_file.read()).decode()
+
 
 def community_post(category, author, meta, text, reactions, comments):
     """Render a demo community post."""
@@ -965,14 +972,31 @@ elif page == "🍔 Local Deals":
 # FOOTER
 # ---------------------------------------------------------
 
+milnova_logo = get_svg_base64("MilnovaLogoUpdateLIGHTMODE.svg")
+
 st.markdown(
-    dedent("""
+    dedent(f"""
         <div class="around-footer">
             <strong>around.</strong>
             &nbsp;•&nbsp;
             Lyons, Kansas
+
             <br><br>
+
             Powered by Milnova Software Solutions
+
+            <br>
+
+            <img
+                src="data:image/svg+xml;base64,{milnova_logo}"
+                alt="Milnova Software Solutions"
+                style="
+                    width: 130px;
+                    max-width: 40%;
+                    margin-top: 10px;
+                    height: auto;
+                "
+            >
         </div>
     """),
     unsafe_allow_html=True,
