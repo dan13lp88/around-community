@@ -1,4 +1,5 @@
 import streamlit as st
+from textwrap import dedent
 
 # =========================================================
 # AROUND
@@ -24,241 +25,229 @@ st.set_page_config(
 # ---------------------------------------------------------
 
 st.markdown(
-    """
-    <style>
+    dedent("""
+        <style>
 
-    :root {
-        --around-bg: #F5F7FA;
-        --around-surface: #FFFFFF;
-        --around-text: #111827;
-        --around-muted: #6B7280;
-        --around-border: #E5E7EB;
-        --around-primary: #2563EB;
-        --around-hover: #F3F4F6;
-    }
+        :root {
+            --around-bg: #F5F7FA;
+            --around-surface: #FFFFFF;
+            --around-text: #111827;
+            --around-muted: #6B7280;
+            --around-border: #E5E7EB;
+            --around-primary: #2563EB;
+            --around-hover: #F3F4F6;
+        }
 
+        /* =====================================================
+           APP
+           ===================================================== */
 
-    /* =====================================================
-       APP
-       ===================================================== */
+        .stApp {
+            background: var(--around-bg);
+            color: var(--around-text);
+        }
 
-    .stApp {
-        background: var(--around-bg);
-        color: var(--around-text);
-    }
+        .block-container {
+            padding-top: 1.5rem;
+            padding-bottom: 3rem;
+            max-width: 1180px;
+        }
 
-    .block-container {
-        padding-top: 1.5rem;
-        padding-bottom: 3rem;
-        max-width: 1180px;
-    }
+        /* =====================================================
+           GLOBAL TEXT
+           ===================================================== */
 
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        label {
+            color: var(--around-text) !important;
+        }
 
-    /* =====================================================
-       GLOBAL TEXT
-       ===================================================== */
+        [data-testid="stMarkdownContainer"] {
+            color: var(--around-text);
+        }
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6,
-    p,
-    label {
-        color: var(--around-text) !important;
-    }
+        /* =====================================================
+           BRAND
+           ===================================================== */
 
-    [data-testid="stMarkdownContainer"] {
-        color: var(--around-text);
-    }
+        .around-logo {
+            font-size: 2.4rem;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin-bottom: 0;
+            color: var(--around-text);
+        }
 
+        .location-text {
+            color: var(--around-muted);
+            font-size: 0.95rem;
+            margin-top: -5px;
+        }
 
-    /* =====================================================
-       BRAND
-       ===================================================== */
+        /* =====================================================
+           SIDEBAR
+           ===================================================== */
 
-    .around-logo {
-        font-size: 2.4rem;
-        font-weight: 800;
-        letter-spacing: -1.5px;
-        margin-bottom: 0;
-        color: var(--around-text);
-    }
+        section[data-testid="stSidebar"] {
+            background: var(--around-surface);
+            border-right: 1px solid var(--around-border);
+        }
 
-    .location-text {
-        color: var(--around-muted);
-        font-size: 0.95rem;
-        margin-top: -5px;
-    }
+        section[data-testid="stSidebar"] * {
+            color: var(--around-text);
+        }
 
+        /* =====================================================
+           WELCOME CARD
+           ===================================================== */
 
-    /* =====================================================
-       SIDEBAR
-       ===================================================== */
+        .welcome-card {
+            background: var(--around-surface);
+            border: 1px solid var(--around-border);
+            border-radius: 18px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
 
-    section[data-testid="stSidebar"] {
-        background: var(--around-surface);
-        border-right: 1px solid var(--around-border);
-    }
+        .welcome-title {
+            font-size: 1.65rem;
+            font-weight: 750;
+            color: var(--around-text);
+            margin-bottom: 5px;
+        }
 
-    section[data-testid="stSidebar"] * {
-        color: var(--around-text);
-    }
+        .welcome-subtitle {
+            color: var(--around-muted);
+            margin-bottom: 0;
+            line-height: 1.5;
+        }
 
+        /* =====================================================
+           CONTENT CARDS
+           ===================================================== */
 
-    /* =====================================================
-       WELCOME CARD
-       ===================================================== */
+        .around-card {
+            background: var(--around-surface);
+            border: 1px solid var(--around-border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
 
-    .welcome-card {
-        background: var(--around-surface);
-        border: 1px solid var(--around-border);
-        border-radius: 18px;
-        padding: 24px;
-        margin-bottom: 20px;
-    }
+        .post-author {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--around-text);
+        }
 
-    .welcome-title {
-        font-size: 1.65rem;
-        font-weight: 750;
-        color: var(--around-text);
-        margin-bottom: 5px;
-    }
+        .post-meta {
+            color: var(--around-muted);
+            font-size: 0.82rem;
+            margin-top: 2px;
+        }
 
-    .welcome-subtitle {
-        color: var(--around-muted);
-        margin-bottom: 0;
-        line-height: 1.5;
-    }
+        .post-text {
+            color: var(--around-text);
+            font-size: 1rem;
+            line-height: 1.55;
+            margin-top: 14px;
+            margin-bottom: 12px;
+        }
 
+        .post-stats {
+            color: var(--around-muted);
+            font-size: 0.85rem;
+            padding-top: 8px;
+        }
 
-    /* =====================================================
-       CONTENT CARDS
-       ===================================================== */
+        /* =====================================================
+           CATEGORY PILLS
+           ===================================================== */
 
-    .around-card {
-        background: var(--around-surface);
-        border: 1px solid var(--around-border);
-        border-radius: 16px;
-        padding: 20px;
-        margin-bottom: 16px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
+        .pill {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: #EFF6FF;
+            color: #1D4ED8;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
 
-    .post-author {
-        font-size: 1rem;
-        font-weight: 700;
-        color: var(--around-text);
-    }
+        /* =====================================================
+           MARKETPLACE
+           ===================================================== */
 
-    .post-meta {
-        color: var(--around-muted);
-        font-size: 0.82rem;
-        margin-top: 2px;
-    }
+        .price {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--around-text);
+            margin-top: 4px;
+        }
 
-    .post-text {
-        color: var(--around-text);
-        font-size: 1rem;
-        line-height: 1.55;
-        margin-top: 14px;
-        margin-bottom: 12px;
-    }
+        .item-title {
+            font-size: 1.05rem;
+            font-weight: 650;
+            color: var(--around-text);
+        }
 
-    .post-stats {
-        color: var(--around-muted);
-        font-size: 0.85rem;
-        padding-top: 8px;
-    }
+        /* =====================================================
+           INPUTS
+           ===================================================== */
 
+        [data-testid="stTextInput"] input {
+            background: var(--around-surface);
+            color: var(--around-text);
+            border: 1px solid var(--around-border);
+        }
 
-    /* =====================================================
-       CATEGORY PILLS
-       ===================================================== */
+        [data-testid="stTextInput"] input::placeholder {
+            color: #9CA3AF;
+        }
 
-    .pill {
-        display: inline-block;
-        padding: 5px 10px;
-        border-radius: 999px;
-        background: #EFF6FF;
-        color: #1D4ED8;
-        font-size: 0.75rem;
-        font-weight: 700;
-        margin-bottom: 10px;
-    }
+        /* =====================================================
+           BUTTONS
+           ===================================================== */
 
+        .stButton > button {
+            border-radius: 10px;
+            font-weight: 600;
+        }
 
-    /* =====================================================
-       MARKETPLACE
-       ===================================================== */
+        /* =====================================================
+           FOOTER
+           ===================================================== */
 
-    .price {
-        font-size: 1.35rem;
-        font-weight: 800;
-        color: var(--around-text);
-        margin-top: 4px;
-    }
+        .around-footer {
+            text-align: center;
+            color: #9CA3AF;
+            font-size: 0.78rem;
+            padding-top: 35px;
+            padding-bottom: 15px;
+        }
 
-    .item-title {
-        font-size: 1.05rem;
-        font-weight: 650;
-        color: var(--around-text);
-    }
+        /* =====================================================
+           HIDE DEFAULT STREAMLIT ELEMENTS
+           ===================================================== */
 
+        #MainMenu {
+            visibility: hidden;
+        }
 
-    /* =====================================================
-       INPUTS
-       ===================================================== */
+        footer {
+            visibility: hidden;
+        }
 
-    [data-testid="stTextInput"] input {
-        background: var(--around-surface);
-        color: var(--around-text);
-        border: 1px solid var(--around-border);
-    }
-
-    [data-testid="stTextInput"] input::placeholder {
-        color: #9CA3AF;
-    }
-
-
-    /* =====================================================
-       BUTTONS
-       ===================================================== */
-
-    .stButton > button {
-        border-radius: 10px;
-        font-weight: 600;
-    }
-
-
-    /* =====================================================
-       FOOTER
-       ===================================================== */
-
-    .around-footer {
-        text-align: center;
-        color: #9CA3AF;
-        font-size: 0.78rem;
-        padding-top: 35px;
-        padding-bottom: 15px;
-    }
-
-
-    /* =====================================================
-       HIDE DEFAULT STREAMLIT ELEMENTS
-       ===================================================== */
-
-    #MainMenu {
-        visibility: hidden;
-    }
-
-    footer {
-        visibility: hidden;
-    }
-
-    </style>
-    """,
+        </style>
+    """),
     unsafe_allow_html=True,
 )
 
@@ -271,17 +260,17 @@ def community_post(category, author, meta, text, reactions, comments):
     """Render a demo community post."""
 
     st.markdown(
-        f"""
-        <div class="around-card">
-            <span class="pill">{category}</span>
-            <div class="post-author">{author}</div>
-            <div class="post-meta">{meta}</div>
-            <div class="post-text">{text}</div>
-            <div class="post-stats">
-                👍 {reactions} reactions &nbsp;&nbsp; 💬 {comments} comments
+        dedent(f"""
+            <div class="around-card">
+                <span class="pill">{category}</span>
+                <div class="post-author">{author}</div>
+                <div class="post-meta">{meta}</div>
+                <div class="post-text">{text}</div>
+                <div class="post-stats">
+                    👍 {reactions} reactions &nbsp;&nbsp; 💬 {comments} comments
+                </div>
             </div>
-        </div>
-        """,
+        """),
         unsafe_allow_html=True,
     )
 
@@ -290,13 +279,13 @@ def marketplace_card(title, price, meta):
     """Render a demo marketplace item."""
 
     st.markdown(
-        f"""
-        <div class="around-card">
-            <div class="item-title">{title}</div>
-            <div class="price">{price}</div>
-            <div class="post-meta">{meta}</div>
-        </div>
-        """,
+        dedent(f"""
+            <div class="around-card">
+                <div class="item-title">{title}</div>
+                <div class="price">{price}</div>
+                <div class="post-meta">{meta}</div>
+            </div>
+        """),
         unsafe_allow_html=True,
     )
 
@@ -308,10 +297,10 @@ def marketplace_card(title, price, meta):
 with st.sidebar:
 
     st.markdown(
-        """
-        <div class="around-logo">around.</div>
-        <div class="location-text">📍 Lyons, Kansas</div>
-        """,
+        dedent("""
+            <div class="around-logo">around.</div>
+            <div class="location-text">📍 Lyons, Kansas</div>
+        """),
         unsafe_allow_html=True,
     )
 
@@ -380,12 +369,10 @@ top_left, top_right = st.columns([4, 1])
 with top_left:
 
     st.markdown(
-        """
-        <div class="around-logo">around.</div>
-        <div class="location-text">
-            Your community. All in one place.
-        </div>
-        """,
+        dedent("""
+            <div class="around-logo">around.</div>
+            <div class="location-text">Your community. All in one place.</div>
+        """),
         unsafe_allow_html=True,
     )
 
@@ -409,19 +396,16 @@ st.write("")
 if page == "🏠 Home":
 
     st.markdown(
-        """
-        <div class="welcome-card">
-            <div class="welcome-title">
-                What's Around Lyons?
+        dedent("""
+            <div class="welcome-card">
+                <div class="welcome-title">What's Around Lyons?</div>
+                <div class="welcome-subtitle">
+                    See what your neighbors are talking about,
+                    what's for sale, local auctions, services,
+                    and deals happening around town.
+                </div>
             </div>
-
-            <div class="welcome-subtitle">
-                See what your neighbors are talking about,
-                what's for sale, local auctions, services,
-                and deals happening around town.
-            </div>
-        </div>
-        """,
+        """),
         unsafe_allow_html=True,
     )
 
@@ -592,27 +576,17 @@ if page == "🏠 Home":
         st.subheader("Ending soon")
 
         st.markdown(
-            """
-            <div class="around-card">
-                <span class="pill">AUCTION</span>
-
-                <div class="item-title">
-                    Vintage Coca-Cola Cooler
+            dedent("""
+                <div class="around-card">
+                    <span class="pill">AUCTION</span>
+                    <div class="item-title">Vintage Coca-Cola Cooler</div>
+                    <div class="price">$86</div>
+                    <div class="post-meta">Current bid · 7 bids</div>
+                    <div class="post-text">
+                        <strong>⏱ 2h 18m remaining</strong>
+                    </div>
                 </div>
-
-                <div class="price">
-                    $86
-                </div>
-
-                <div class="post-meta">
-                    Current bid · 7 bids
-                </div>
-
-                <div class="post-text">
-                    <strong>⏱ 2h 18m remaining</strong>
-                </div>
-            </div>
-            """,
+            """),
             unsafe_allow_html=True,
         )
 
@@ -627,23 +601,15 @@ if page == "🏠 Home":
         st.subheader("Local deal")
 
         st.markdown(
-            """
-            <div class="around-card">
-
-                <span class="pill">
-                    TODAY
-                </span>
-
-                <div class="item-title">
-                    🍔 Main Street Grill
+            dedent("""
+                <div class="around-card">
+                    <span class="pill">TODAY</span>
+                    <div class="item-title">🍔 Main Street Grill</div>
+                    <div class="post-text">
+                        Burger, fries & drink special — $9.99 today.
+                    </div>
                 </div>
-
-                <div class="post-text">
-                    Burger, fries & drink special — $9.99 today.
-                </div>
-
-            </div>
-            """,
+            """),
             unsafe_allow_html=True,
         )
 
@@ -822,33 +788,17 @@ elif page == "🔨 Auctions":
         )
 
     st.markdown(
-        """
-        <div class="around-card">
-
-            <span class="pill">
-                ENDING SOON
-            </span>
-
-            <div class="item-title">
-                Vintage Coca-Cola Cooler
+        dedent("""
+            <div class="around-card">
+                <span class="pill">ENDING SOON</span>
+                <div class="item-title">Vintage Coca-Cola Cooler</div>
+                <div class="price">$86 current bid</div>
+                <div class="post-meta">7 bids</div>
+                <div class="post-text">
+                    <strong>⏱ 2 hours 18 minutes remaining</strong>
+                </div>
             </div>
-
-            <div class="price">
-                $86 current bid
-            </div>
-
-            <div class="post-meta">
-                7 bids
-            </div>
-
-            <div class="post-text">
-                <strong>
-                    ⏱ 2 hours 18 minutes remaining
-                </strong>
-            </div>
-
-        </div>
-        """,
+        """),
         unsafe_allow_html=True,
     )
 
@@ -925,28 +875,18 @@ elif page == "🔧 Services":
         )
 
     st.markdown(
-        """
-        <div class="around-card">
-
-            <span class="pill">
-                LAWN CARE
-            </span>
-
-            <div class="post-author">
-                🌱 Jake's Lawn Service
+        dedent("""
+            <div class="around-card">
+                <span class="pill">LAWN CARE</span>
+                <div class="post-author">🌱 Jake's Lawn Service</div>
+                <div class="post-text">
+                    Mowing, trimming, cleanup and small residential yards.
+                </div>
+                <div class="post-meta">
+                    Serves Lyons and surrounding area
+                </div>
             </div>
-
-            <div class="post-text">
-                Mowing, trimming, cleanup and small
-                residential yards.
-            </div>
-
-            <div class="post-meta">
-                Serves Lyons and surrounding area
-            </div>
-
-        </div>
-        """,
+        """),
         unsafe_allow_html=True,
     )
 
@@ -987,56 +927,36 @@ elif page == "🍔 Local Deals":
         )
 
     st.markdown(
-        """
-        <div class="around-card">
-
-            <span class="pill">
-                TODAY'S DEAL
-            </span>
-
-            <div class="post-author">
-                🍔 Main Street Grill
+        dedent("""
+            <div class="around-card">
+                <span class="pill">TODAY'S DEAL</span>
+                <div class="post-author">🍔 Main Street Grill</div>
+                <div class="post-text">
+                    <strong>Burger + fries + drink — $9.99</strong>
+                    <br><br>
+                    Available today from 11 AM – 8 PM.
+                </div>
+                <div class="post-meta">
+                    Lyons, Kansas
+                </div>
             </div>
-
-            <div class="post-text">
-                <strong>
-                    Burger + fries + drink — $9.99
-                </strong>
-                <br><br>
-                Available today from 11 AM – 8 PM.
-            </div>
-
-            <div class="post-meta">
-                Lyons, Kansas
-            </div>
-
-        </div>
-        """,
+        """),
         unsafe_allow_html=True,
     )
 
     st.markdown(
-        """
-        <div class="around-card">
-
-            <span class="pill">
-                SPECIAL
-            </span>
-
-            <div class="post-author">
-                ☕ Local Coffee Shop
+        dedent("""
+            <div class="around-card">
+                <span class="pill">SPECIAL</span>
+                <div class="post-author">☕ Local Coffee Shop</div>
+                <div class="post-text">
+                    Buy any large drink and get a pastry for $1.
+                </div>
+                <div class="post-meta">
+                    Today only
+                </div>
             </div>
-
-            <div class="post-text">
-                Buy any large drink and get a pastry for $1.
-            </div>
-
-            <div class="post-meta">
-                Today only
-            </div>
-
-        </div>
-        """,
+        """),
         unsafe_allow_html=True,
     )
 
@@ -1046,18 +966,14 @@ elif page == "🍔 Local Deals":
 # ---------------------------------------------------------
 
 st.markdown(
-    """
-    <div class="around-footer">
-
-        <strong>around.</strong>
-        &nbsp;•&nbsp;
-        Lyons, Kansas
-
-        <br><br>
-
-        Powered by Milnova Software Solutions
-
-    </div>
-    """,
+    dedent("""
+        <div class="around-footer">
+            <strong>around.</strong>
+            &nbsp;•&nbsp;
+            Lyons, Kansas
+            <br><br>
+            Powered by Milnova Software Solutions
+        </div>
+    """),
     unsafe_allow_html=True,
 )
