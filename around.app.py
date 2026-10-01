@@ -234,6 +234,16 @@ st.markdown(
             padding-bottom: 15px;
         }
 
+        @media (max-width: 768px) {
+            .st-key-footer_logo [data-testid="stHorizontalBlock"] {
+                flex-wrap: nowrap !important;
+            }
+
+            .st-key-footer_logo [data-testid="stColumn"] {
+                min-width: 0 !important;
+            }
+        }
+
         /* =====================================================
            HIDE DEFAULT STREAMLIT ELEMENTS
            ===================================================== */
@@ -970,10 +980,11 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-logo_left, logo_center, logo_right = st.columns([4, 1, 4])
+with st.container(key="footer_logo"):
+    logo_left, logo_center, logo_right = st.columns([4, 1, 4])
 
-with logo_center:
-    st.image(
-        "MilnovaLogoUpdateLIGHTMODE.svg",
-        width=130,
-    )
+    with logo_center:
+        st.image(
+            "MilnovaLogoUpdateLIGHTMODE.svg",
+            width=130,
+        )
