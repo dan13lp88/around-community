@@ -1,5 +1,6 @@
 import streamlit as st
 from textwrap import dedent
+from supabase import create_client
 
 # =========================================================
 # AROUND
@@ -18,7 +19,37 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+# -----------------------------
+# SUPABASE CONNECTION
+# -----------------------------
 
+@st.cache_resource
+def init_supabase():
+    return create_client(
+        st.secrets["SUPABASE_URL"],
+        st.secrets["SUPABASE_KEY"],
+    )
+
+supabase = init_supabase()
+try:
+    community_test = (
+        supabase.table("communities")
+        .select("name, state, slug")
+        .eq("slug", "lyons-ks")
+        .execute()
+    )
+
+    if community_test.data:
+        st.success(
+            f"Supabase connected: "
+            f"{community_test.data[0]['name']}, "
+            f"{community_test.data[0]['state']}"
+        )
+    else:
+        st.warning("Supabase connected, but Lyons was not found.")
+
+except Exception as e:
+    st.error(f"Supabase connection failed: {e}")
 
 # ---------------------------------------------------------
 # DEMO SERVICE DATA
