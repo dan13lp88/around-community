@@ -64,6 +64,9 @@ if "show_login" not in st.session_state:
 
 if "show_signup" not in st.session_state:
     st.session_state.show_signup = False
+
+if "profile" not in st.session_state:
+    st.session_state.profile = None
 # ---------------------------------------------------------
 # DEMO SERVICE DATA
 # ---------------------------------------------------------
