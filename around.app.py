@@ -157,14 +157,23 @@ st.markdown(
         }
 
         [data-testid="stMarkdownContainer"] {
-            color: var(--around-text);
-        }
+    color: var(--around-text);
+}
 
-        /* =====================================================
-           BRAND
-           ===================================================== */
+/* =====================================================
+   STATUS MESSAGES
+   ===================================================== */
 
-        .around-logo {
+[data-testid="stAlert"] [data-testid="stMarkdownContainer"],
+[data-testid="stAlert"] [data-testid="stMarkdownContainer"] p {
+    color: inherit !important;
+}
+
+/* =====================================================
+   BRAND
+   ===================================================== */
+
+.around-logo {
             font-size: 2.4rem;
             font-weight: 800;
             letter-spacing: -1.5px;
