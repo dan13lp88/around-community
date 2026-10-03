@@ -23,14 +23,17 @@ st.set_page_config(
 # SUPABASE CONNECTION
 # -----------------------------
 
-@st.cache_resource
 def init_supabase():
     return create_client(
         st.secrets["SUPABASE_URL"],
         st.secrets["SUPABASE_KEY"],
     )
 
-supabase = init_supabase()
+
+if "supabase_client" not in st.session_state:
+    st.session_state.supabase_client = init_supabase()
+
+supabase = st.session_state.supabase_client
 try:
     community_test = (
         supabase.table("communities")
