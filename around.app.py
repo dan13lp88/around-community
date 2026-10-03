@@ -166,7 +166,7 @@ st.markdown(
 
 [data-testid="stAlert"] [data-testid="stMarkdownContainer"],
 [data-testid="stAlert"] [data-testid="stMarkdownContainer"] p {
-    color: inherit !important;
+    color: #166534 !important;
 }
 
 /* =====================================================
