@@ -544,6 +544,8 @@ with st.sidebar:
 
         if st.session_state.show_signup:
 
+        if st.session_state.show_signup:
+
             st.markdown("##### Create your Around account")
 
             signup_email = st.text_input(
@@ -581,10 +583,12 @@ with st.sidebar:
                             "to confirm your account."
                         )
 
-                   except Exception as e:
+                except Exception as e:
                     st.error(
-                        f"Unable to resend confirmation: {e}"
+                        f"Unable to create account: {e}"
                     )
+
+            if st.button(
                 "Resend confirmation email",
                 use_container_width=True,
             ):
@@ -605,6 +609,8 @@ with st.sidebar:
 
                 except Exception as e:
                     st.error(
+                        f"Unable to resend confirmation: {e}"
+                    )
 
     else:
 
