@@ -67,6 +67,26 @@ if "show_signup" not in st.session_state:
 
 if "profile" not in st.session_state:
     st.session_state.profile = None
+    # ---------------------------------------------------------
+# LOAD SIGNED-IN USER PROFILE
+# ---------------------------------------------------------
+
+if st.session_state.user is not None:
+    try:
+        profile_response = (
+            supabase.table("profiles")
+            .select("*")
+            .eq("id", st.session_state.user.id)
+            .execute()
+        )
+
+        if profile_response.data:
+            st.session_state.profile = profile_response.data[0]
+        else:
+            st.session_state.profile = None
+
+    except Exception as e:
+        st.session_state.profile = None
 # ---------------------------------------------------------
 # DEMO SERVICE DATA
 # ---------------------------------------------------------
@@ -644,7 +664,67 @@ with st.sidebar:
     else:
 
         st.markdown("**Signed in**")
+        if st.session_state.profile is None:
 
+            st.markdown("##### Finish your Around profile")
+
+            profile_username = st.text_input(
+                "Username",
+                placeholder="Example: danielp",
+                key="profile_username",
+            )
+
+            profile_display_name = st.text_input(
+                "Display name",
+                placeholder="Example: Daniel P.",
+                key="profile_display_name",
+            )
+
+            if st.button(
+                "Create Profile",
+                type="primary",
+                use_container_width=True,
+            ):
+                if not profile_username.strip():
+                    st.error("Please choose a username.")
+
+                else:
+                    try:
+                        community_response = (
+                            supabase.table("communities")
+                            .select("id")
+                            .eq("slug", "lyons-ks")
+                            .single()
+                            .execute()
+                        )
+
+                        community_id = community_response.data["id"]
+
+                        profile_response = (
+                            supabase.table("profiles")
+                            .insert(
+                                {
+                                    "id": st.session_state.user.id,
+                                    "community_id": community_id,
+                                    "username": profile_username.strip(),
+                                    "display_name": profile_display_name.strip()
+                                    or None,
+                                }
+                            )
+                            .execute()
+                        )
+
+                        st.session_state.profile = (
+                            profile_response.data[0]
+                        )
+
+                        st.success("Your Around profile is ready!")
+                        st.rerun()
+
+                    except Exception as e:
+                        st.error(
+                            f"Unable to create profile: {e}"
+                        )
         st.caption(st.session_state.user.email)
 
         if st.button(
