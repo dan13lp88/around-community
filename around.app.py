@@ -544,7 +544,6 @@ with st.sidebar:
 
         if st.session_state.show_signup:
 
-        if st.session_state.show_signup:
 
             st.markdown("##### Create your Around account")
 
