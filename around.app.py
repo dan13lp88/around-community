@@ -583,6 +583,27 @@ with st.sidebar:
 
                 except Exception as e:
                     st.error(f"Unable to create account: {e}")
+                    if st.button(
+                "Resend confirmation email",
+                use_container_width=True,
+            ):
+                try:
+                    supabase.auth.resend(
+                        {
+                            "type": "signup",
+                            "email": signup_email,
+                            "options": {
+                                "email_redirect_to": "https://around.streamlit.app",
+                            },
+                        }
+                    )
+
+                    st.success(
+                        "Confirmation email sent! Check your inbox."
+                    )
+
+                except Exception as e:
+                    st.error(
 
     else:
 
