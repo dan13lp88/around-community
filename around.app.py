@@ -581,9 +581,10 @@ with st.sidebar:
                             "to confirm your account."
                         )
 
-                except Exception as e:
-                    st.error(f"Unable to create account: {e}")
-                    if st.button(
+                   except Exception as e:
+                    st.error(
+                        f"Unable to resend confirmation: {e}"
+                    )
                 "Resend confirmation email",
                 use_container_width=True,
             ):
