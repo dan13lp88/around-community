@@ -43,14 +43,10 @@ try:
     )
 
     if community_test.data:
-        st.markdown(
-            f"""
-            <div class="connection-status">
-                ● Supabase connected &nbsp;•&nbsp;
-                {community_test.data[0]['name']}, {community_test.data[0]['state']}
-            </div>
-            """,
-            unsafe_allow_html=True,
+        st.caption(
+            f"🟢 Supabase connected • "
+            f"{community_test.data[0]['name']}, "
+            f"{community_test.data[0]['state']}"
         )
     else:
         st.warning("Supabase connected, but Lyons was not found.")
