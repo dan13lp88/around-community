@@ -663,8 +663,20 @@ with st.sidebar:
 
     else:
 
-        st.markdown("**Signed in**")
-        if st.session_state.profile is None:
+             if st.session_state.profile is not None:
+            display_name = (
+                st.session_state.profile.get("display_name")
+                or st.session_state.profile["username"]
+            )
+
+            st.markdown(f"**{display_name}**")
+            st.caption(
+                f"@{st.session_state.profile['username']}  ·  📍 Lyons, Kansas"
+            )
+
+        else:
+            st.markdown("**Signed in**")
+            st.caption(st.session_state.user.email)
 
             st.markdown("##### Finish your Around profile")
 
@@ -725,7 +737,6 @@ with st.sidebar:
                         st.error(
                             f"Unable to create profile: {e}"
                         )
-        st.caption(st.session_state.user.email)
 
         if st.button(
             "Log out",
