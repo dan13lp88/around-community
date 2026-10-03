@@ -50,7 +50,18 @@ try:
 
 except Exception as e:
     st.error(f"Supabase connection failed: {e}")
+# ---------------------------------------------------------
+# AUTHENTICATION STATE
+# ---------------------------------------------------------
 
+if "user" not in st.session_state:
+    st.session_state.user = None
+
+if "show_login" not in st.session_state:
+    st.session_state.show_login = False
+
+if "show_signup" not in st.session_state:
+    st.session_state.show_signup = False
 # ---------------------------------------------------------
 # DEMO SERVICE DATA
 # ---------------------------------------------------------
@@ -467,27 +478,129 @@ with st.sidebar:
 
     st.divider()
 
-    st.markdown("**Not signed in**")
+    if st.session_state.user is None:
 
-    st.caption(
-        "Create a local account to post, sell, bid, and comment."
-    )
+        st.markdown("**Not signed in**")
 
-    login_col, signup_col = st.columns(2)
+        st.caption(
+            "Create a local account to post, sell, bid, and comment."
+        )
 
-    with login_col:
+        login_col, signup_col = st.columns(2)
+
+        with login_col:
+            if st.button(
+                "Log in",
+                use_container_width=True,
+            ):
+                st.session_state.show_login = True
+                st.session_state.show_signup = False
+                st.rerun()
+
+        with signup_col:
+            if st.button(
+                "Sign up",
+                use_container_width=True,
+            ):
+                st.session_state.show_signup = True
+                st.session_state.show_login = False
+                st.rerun()
+
+        if st.session_state.show_login:
+
+            st.markdown("##### Log in")
+
+            login_email = st.text_input(
+                "Email",
+                key="login_email",
+            )
+
+            login_password = st.text_input(
+                "Password",
+                type="password",
+                key="login_password",
+            )
+
+            if st.button(
+                "Log in to Around",
+                type="primary",
+                use_container_width=True,
+            ):
+                try:
+                    response = supabase.auth.sign_in_with_password(
+                        {
+                            "email": login_email,
+                            "password": login_password,
+                        }
+                    )
+
+                    st.session_state.user = response.user
+                    st.session_state.show_login = False
+
+                    st.rerun()
+
+                except Exception as e:
+                    st.error(f"Unable to log in: {e}")
+
+        if st.session_state.show_signup:
+
+            st.markdown("##### Create your Around account")
+
+            signup_email = st.text_input(
+                "Email",
+                key="signup_email",
+            )
+
+            signup_password = st.text_input(
+                "Password",
+                type="password",
+                key="signup_password",
+            )
+
+            if st.button(
+                "Create Account",
+                type="primary",
+                use_container_width=True,
+            ):
+                try:
+                    response = supabase.auth.sign_up(
+                        {
+                            "email": signup_email,
+                            "password": signup_password,
+                        }
+                    )
+
+                    if response.session:
+                        st.session_state.user = response.user
+                        st.session_state.show_signup = False
+                        st.rerun()
+
+                    else:
+                        st.success(
+                            "Account created! Check your email "
+                            "to confirm your account."
+                        )
+
+                except Exception as e:
+                    st.error(f"Unable to create account: {e}")
+
+    else:
+
+        st.markdown("**Signed in**")
+
+        st.caption(st.session_state.user.email)
+
         if st.button(
-            "Log in",
+            "Log out",
             use_container_width=True,
         ):
-            st.toast("Login is coming next.")
+            supabase.auth.sign_out()
 
-    with signup_col:
-        if st.button(
-            "Sign up",
-            use_container_width=True,
-        ):
-            st.toast("Account creation is coming next.")
+            st.session_state.user = None
+            st.session_state.show_login = False
+            st.session_state.show_signup = False
+
+            st.rerun()
 
 
 # ---------------------------------------------------------
