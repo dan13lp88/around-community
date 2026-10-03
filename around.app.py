@@ -88,43 +88,8 @@ if st.session_state.user is not None:
     except Exception as e:
         st.session_state.profile = None
 # ---------------------------------------------------------
-# DEMO SERVICE DATA
+# SERVICES STATE
 # ---------------------------------------------------------
-
-# For now, service listings are stored only in the current
-# Streamlit session. Later, this will be replaced by Supabase.
-
-if "services" not in st.session_state:
-    st.session_state.services = [
-        {
-            "name": "Jake's Lawn Service",
-            "category": "Lawn Care",
-            "description": "Mowing, trimming, cleanup and small residential yards.",
-            "location": "Lyons and surrounding area",
-            "phone": "",
-        },
-        {
-            "name": "Smith Plumbing",
-            "category": "Plumbing",
-            "description": "Residential plumbing repairs, fixture replacement and small installations.",
-            "location": "Lyons, Kansas",
-            "phone": "",
-        },
-        {
-            "name": "Main Street Cleaning",
-            "category": "Cleaning",
-            "description": "Home and small office cleaning services.",
-            "location": "Lyons, Kansas",
-            "phone": "",
-        },
-        {
-            "name": "Rice County Handyman",
-            "category": "Handyman",
-            "description": "Small home repairs, assembly, maintenance and general handyman work.",
-            "location": "Lyons and surrounding area",
-            "phone": "",
-        },
-    ]
 
 if "show_service_form" not in st.session_state:
     st.session_state.show_service_form = False
@@ -1205,6 +1170,37 @@ elif page == "🔧 Services":
     )
 
     # -----------------------------------------------------
+    # LOAD SERVICES FROM SUPABASE
+    # -----------------------------------------------------
+
+    services = []
+    services_load_error = None
+
+    try:
+        community_response = (
+            supabase.table("communities")
+            .select("id")
+            .eq("slug", "lyons-ks")
+            .single()
+            .execute()
+        )
+
+        current_community_id = community_response.data["id"]
+
+        services_response = (
+            supabase.table("services")
+            .select("*")
+            .eq("community_id", current_community_id)
+            .order("created_at", desc=True)
+            .execute()
+        )
+
+        services = services_response.data or []
+
+    except Exception as e:
+        services_load_error = e
+
+    # -----------------------------------------------------
     # SEARCH + FILTERS
     # -----------------------------------------------------
 
@@ -1250,21 +1246,36 @@ elif page == "🔧 Services":
             type="primary",
             use_container_width=True,
         ):
-            st.session_state.show_service_form = (
-                not st.session_state.show_service_form
-            )
+            if st.session_state.user is None:
+                st.warning(
+                    "Log in to your Around account before listing a service."
+                )
+
+            elif st.session_state.profile is None:
+                st.warning(
+                    "Finish your Around profile before listing a service."
+                )
+
+            else:
+                st.session_state.show_service_form = (
+                    not st.session_state.show_service_form
+                )
 
     # -----------------------------------------------------
     # LIST SERVICE FORM
     # -----------------------------------------------------
 
-    if st.session_state.show_service_form:
+    if (
+        st.session_state.show_service_form
+        and st.session_state.user is not None
+        and st.session_state.profile is not None
+    ):
 
         st.markdown("### List a Service")
 
         st.caption(
-            "Add a service to Around. For this prototype, "
-            "the listing will only remain during the current session."
+            "Add a service to Around. Your listing will be saved "
+            "to the Lyons community."
         )
 
         with st.form("list_service_form"):
@@ -1342,24 +1353,33 @@ elif page == "🔧 Services":
                     )
 
                 else:
+                    try:
+                        supabase.table("services").insert(
+                            {
+                                "community_id": (
+                                    st.session_state.profile["community_id"]
+                                ),
+                                "owner_id": st.session_state.user.id,
+                                "name": service_name.strip(),
+                                "category": new_service_category,
+                                "description": service_description.strip(),
+                                "location": service_location.strip(),
+                                "phone": service_phone.strip() or None,
+                            }
+                        ).execute()
 
-                    st.session_state.services.append(
-                        {
-                            "name": service_name.strip(),
-                            "category": new_service_category,
-                            "description": service_description.strip(),
-                            "location": service_location.strip(),
-                            "phone": service_phone.strip(),
-                        }
-                    )
+                        st.session_state.show_service_form = False
 
-                    st.session_state.show_service_form = False
+                        st.success(
+                            f"{service_name.strip()} was added to Around!"
+                        )
 
-                    st.success(
-                        f"{service_name.strip()} was added to Around!"
-                    )
+                        st.rerun()
 
-                    st.rerun()
+                    except Exception as e:
+                        st.error(
+                            f"Unable to list service: {e}"
+                        )
 
             if cancel_service:
                 st.session_state.show_service_form = False
@@ -1371,62 +1391,67 @@ elif page == "🔧 Services":
     # FILTER SERVICE LISTINGS
     # -----------------------------------------------------
 
-    filtered_services = []
-
-    for service in st.session_state.services:
-
-        category_matches = (
-            service_category == "All Services"
-            or service["category"] == service_category
+    if services_load_error is not None:
+        st.error(
+            f"Unable to load services: {services_load_error}"
         )
-
-        search_text = service_search.strip().lower()
-
-        searchable_text = (
-            f'{service["name"]} '
-            f'{service["category"]} '
-            f'{service["description"]} '
-            f'{service["location"]}'
-        ).lower()
-
-        search_matches = (
-            not search_text
-            or search_text in searchable_text
-        )
-
-        if category_matches and search_matches:
-            filtered_services.append(service)
-
-    # -----------------------------------------------------
-    # DISPLAY RESULTS
-    # -----------------------------------------------------
-
-    if filtered_services:
-
-        st.caption(
-            f"{len(filtered_services)} "
-            f"{'service' if len(filtered_services) == 1 else 'services'} found"
-        )
-
-        for index, service in enumerate(filtered_services):
-
-            service_card(service)
-
-            if service.get("phone"):
-                if st.button(
-                    "View Contact Information",
-                    key=f"service_contact_{index}_{service['name']}",
-                    use_container_width=True,
-                ):
-                    st.info(
-                        f"📞 {service['phone']}"
-                    )
 
     else:
+        filtered_services = []
 
-        st.info(
-            "No services match your search or selected category."
-        )
+        for service in services:
+
+            category_matches = (
+                service_category == "All Services"
+                or service["category"] == service_category
+            )
+
+            search_text = service_search.strip().lower()
+
+            searchable_text = (
+                f'{service["name"]} '
+                f'{service["category"]} '
+                f'{service["description"]} '
+                f'{service["location"]}'
+            ).lower()
+
+            search_matches = (
+                not search_text
+                or search_text in searchable_text
+            )
+
+            if category_matches and search_matches:
+                filtered_services.append(service)
+
+        # -------------------------------------------------
+        # DISPLAY RESULTS
+        # -------------------------------------------------
+
+        if filtered_services:
+
+            st.caption(
+                f"{len(filtered_services)} "
+                f"{'service' if len(filtered_services) == 1 else 'services'} found"
+            )
+
+            for service in filtered_services:
+
+                service_card(service)
+
+                if service.get("phone"):
+                    if st.button(
+                        "View Contact Information",
+                        key=f"service_contact_{service['id']}",
+                        use_container_width=True,
+                    ):
+                        st.info(
+                            f"📞 {service['phone']}"
+                        )
+
+        else:
+            st.info(
+                "No services match your search or selected category."
+            )
 
 
 # =========================================================
