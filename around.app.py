@@ -663,7 +663,7 @@ with st.sidebar:
 
     else:
 
-             if st.session_state.profile is not None:
+        if st.session_state.profile is not None:
             display_name = (
                 st.session_state.profile.get("display_name")
                 or st.session_state.profile["username"]
@@ -671,7 +671,7 @@ with st.sidebar:
 
             st.markdown(f"**{display_name}**")
             st.caption(
-                f"@{st.session_state.profile['username']}  ·  📍 Lyons, Kansas"
+                f"@{st.session_state.profile['username']} · 📍 Lyons, Kansas"
             )
 
         else:
@@ -719,16 +719,15 @@ with st.sidebar:
                                     "id": st.session_state.user.id,
                                     "community_id": community_id,
                                     "username": profile_username.strip(),
-                                    "display_name": profile_display_name.strip()
-                                    or None,
+                                    "display_name": (
+                                        profile_display_name.strip() or None
+                                    ),
                                 }
                             )
                             .execute()
                         )
 
-                        st.session_state.profile = (
-                            profile_response.data[0]
-                        )
+                        st.session_state.profile = profile_response.data[0]
 
                         st.success("Your Around profile is ready!")
                         st.rerun()
@@ -745,6 +744,7 @@ with st.sidebar:
             supabase.auth.sign_out()
 
             st.session_state.user = None
+            st.session_state.profile = None
             st.session_state.show_login = False
             st.session_state.show_signup = False
 
