@@ -34,6 +34,24 @@ if "supabase_client" not in st.session_state:
     st.session_state.supabase_client = init_supabase()
 
 supabase = st.session_state.supabase_client
+# Temporary Supabase connection test
+try:
+    community_test = (
+        supabase.table("communities")
+        .select("name, state")
+        .eq("slug", "lyons-ks")
+        .execute()
+    )
+
+    if community_test.data:
+        st.caption(
+            f"🟢 Supabase connected • "
+            f"{community_test.data[0]['name']}, "
+            f"{community_test.data[0]['state']}"
+        )
+
+except Exception as e:
+    st.caption(f"🔴 Supabase connection failed: {e}")
 # ---------------------------------------------------------
 # AUTHENTICATION STATE
 # ---------------------------------------------------------
