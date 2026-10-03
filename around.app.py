@@ -43,10 +43,14 @@ try:
     )
 
     if community_test.data:
-        st.success(
-            f"Supabase connected: "
-            f"{community_test.data[0]['name']}, "
-            f"{community_test.data[0]['state']}"
+    st.markdown(
+        f"""
+        <div class="connection-status">
+            ● Supabase connected &nbsp;•&nbsp;
+            {community_test.data[0]['name']}, {community_test.data[0]['state']}
+        </div>
+        """,
+        unsafe_allow_html=True,
         )
     else:
         st.warning("Supabase connected, but Lyons was not found.")
@@ -161,12 +165,19 @@ st.markdown(
 }
 
 /* =====================================================
-   STATUS MESSAGES
+   CONNECTION STATUS
    ===================================================== */
 
-[data-testid="stAlert"] [data-testid="stMarkdownContainer"],
-[data-testid="stAlert"] [data-testid="stMarkdownContainer"] p {
+.connection-status {
+    background: #DCFCE7;
     color: #166534 !important;
+    border: 1px solid #BBF7D0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 18px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.4;
 }
 
 /* =====================================================
